@@ -5,6 +5,7 @@ const password = Cypress.env('Password')
 describe("Task E",()=>{
      it("Test",()=>{
           //1. Login 
+          cy.viewport(1200, 800);
           cy.visit("https://aminsite.s2-tastewp.com/wp-login.php?loggedout=true&wp_lang=en_US");
           cy.get('#user_login').type(username);
           cy.get('#user_pass').type(password);
@@ -47,9 +48,32 @@ describe("Task E",()=>{
          
    */      
           //4. Enable Backend Darkmode from Settings -> General Settings.
-          cy.get('#toplevel_page_wp-dark-mode > .wp-submenu > li.wp-first-item > .wp-first-item').click();
-          //cy.get("a[class='router-link-active router-link-exact-active nav-item-child focus:outline-none active']").click();
-          cy.get('#toplevel_page_wp-dark-mode > .wp-submenu > li.wp-first-item > .wp-first-item').click();
+          cy.get('#menu-settings > .wp-has-submenu > .wp-menu-name').click();
+          // bug found
+          cy.get('#menu-settings > .wp-has-submenu > .wp-menu-name').contains('Backend Darkmode').should('not.exist');
+          //5. Validate whether the Darkmode is working or not on the Admin Dashboard.
+          cy.get('#menu-settings > .wp-has-submenu > .wp-menu-name').click();
+          cy.get('.updated').should('not.have.css', 'color', 'rgb(255, 255, 255)');
+          //6. Navigate to the WP Dark Mode.
+          cy.get('#toplevel_page_wp-dark-mode > .wp-has-submenu > .wp-menu-name').click();
+          //7. From Settings -> Switch Settings - Change the “Floating Switch Style” from the default selections (Select any one from the available options, except the default selected one).
+          cy.get(':nth-child(2) > .wp-dark-mode-admin-sidebar-nav-container > .justify-between > .flex > .text-base').click();
+          cy.get('[href="#/switch"]').click();
+          cy.get('.rounded.gap-6 > .rounded > .flex-wrap > :nth-child(3)').click();
+          //8. From Settings -> Switch Settings - Select Custom Switch size & Scale it to 220.
+          cy.get('span.opacity-50').click();
+          cy.get('.close-promo').click();
+          cy.get('.bg-gray-50 > :nth-child(6) > span').click();
+    
+          //9.From Settings -> Switch Settings - Change the Floating Switch Position (Left Bottom)
+          cy.get(':nth-child(2) > .bg-gray-50 > .bg-gray-100').click();
+          //10. Disable Keyboard Shortcut from the Accessibility Settings.
+          cy.get(':nth-child(3) > .wp-dark-mode-admin-sidebar-nav-container > .justify-between').click();
+          cy.get('.wp-dark-mode-admin-sidebar-nav-container > .flex-col > [href="#/accessibility"]').click();
+          //cy.get('.bg-white.gap-5 > :nth-child(1) > .sm\:items-center > .w-auto > .relative > .w-5').click();
+          cy.get('.bg-blue-500').click();
+          //11. From Settings -> Animation - Enable “Darkmode Toggle Animation” & change the “Animation Effect” from the default selections (Select any one from the available options, except the default selected one).
+
      })
 })
 
